@@ -64,7 +64,7 @@ public class Home extends BaseActivity implements HomeMvpView {
     void viewIns(){
 
         mAdapter = new HomeAdapter(profileList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         peopleRv.setLayoutManager(mLayoutManager);
         peopleRv.setItemAnimator(new DefaultItemAnimator());
         peopleRv.setAdapter(mAdapter);
@@ -114,6 +114,7 @@ public class Home extends BaseActivity implements HomeMvpView {
     @Override
     public void loadProfileDataInAdapter(List<PModel> profileList) {
         mAdapter.addProfileDataInList(profileList);
+        peopleRv.scrollToPosition(profileList.size()-1);
     }
 
     @Override

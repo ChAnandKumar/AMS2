@@ -1,5 +1,6 @@
 package com.bartronics.ams2.ui.home;
 
+import com.bartronics.ams2.AmsApp;
 import com.bartronics.ams2.data.DataManager;
 import com.bartronics.ams2.data.db.model.PModel;
 import com.bartronics.ams2.di.ConfigPersistent;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -25,9 +27,6 @@ public class HomePresenter extends BasePresenter<HomeMvpView> {
     private DataManager dataManager;
 
     private CompositeDisposable compositeDisposable;
-
-
-
 
     /*@Inject
     public HomePresenter( CompositeDisposable compositeDisposable) {
@@ -48,6 +47,19 @@ public class HomePresenter extends BasePresenter<HomeMvpView> {
             compositeDisposable = getCompositeDisposable();
         }
         getMvpView().showLoading();
+        Disposable subscription = AmsApp.getBusComponent().getSubject().subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+
+                Timber.i("Rx Buss is called.............");
+                if(s != null){
+                    if(s.equalsIgnoreCase("Refresh"))
+                        loadProfileData();
+                }
+            }
+        });
+
+        getCompositeDisposable().add(subscription);
         Timber.i("HOme is attached..");
     }
 
@@ -61,8 +73,6 @@ public class HomePresenter extends BasePresenter<HomeMvpView> {
 
     public void loadProfileData(){
         checkViewAttached();
-
-
 
         compositeDisposable.add(dataManager.getProfileData()
                 .subscribeOn(Schedulers.io())
@@ -82,8 +92,6 @@ public class HomePresenter extends BasePresenter<HomeMvpView> {
                     }
                 }));
     }
-
-
 
 
     public void showLogMessage() {

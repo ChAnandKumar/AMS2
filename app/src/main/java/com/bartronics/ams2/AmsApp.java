@@ -5,7 +5,9 @@ import android.app.Application;
 import com.amitshekhar.DebugDB;
 import com.bartronics.ams2.data.DataManager;
 import com.bartronics.ams2.di.component.ApplicationComponent;
+import com.bartronics.ams2.di.component.BusComponent;
 import com.bartronics.ams2.di.component.DaggerApplicationComponent;
+import com.bartronics.ams2.di.component.DaggerBusComponent;
 import com.bartronics.ams2.di.module.ApplicationModule;
 
 import javax.inject.Inject;
@@ -22,6 +24,7 @@ public class AmsApp extends Application{
 
     @Inject
     DataManager dataManager;
+    private static BusComponent sBusComponent;
 
     @Override
     public void onCreate() {
@@ -35,8 +38,14 @@ public class AmsApp extends Application{
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
 
+        sBusComponent = DaggerBusComponent.create();
+
         applicationComponent.inject(this);
 
+    }
+
+    public static BusComponent getBusComponent() {
+        return sBusComponent;
     }
 
     public ApplicationComponent getApplicationComponent(){

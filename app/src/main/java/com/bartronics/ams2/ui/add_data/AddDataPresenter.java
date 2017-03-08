@@ -1,5 +1,6 @@
 package com.bartronics.ams2.ui.add_data;
 
+import com.bartronics.ams2.AmsApp;
 import com.bartronics.ams2.data.DataManager;
 import com.bartronics.ams2.data.db.model.PModel;
 import com.bartronics.ams2.di.ConfigPersistent;
@@ -56,6 +57,8 @@ public class AddDataPresenter extends BasePresenter<AddDataMvpView>{
                 if(aBoolean) {
                     getMvpView().showMessage("Data added");
                     getMvpView().finishActivity();
+                    AmsApp.getBusComponent().getSubject().onNext("Refresh");
+
                 }
                 else {
                     getMvpView().showMessage("Data not added");
@@ -63,5 +66,11 @@ public class AddDataPresenter extends BasePresenter<AddDataMvpView>{
             }
         }));
 
+
+
     }
+
+
+
+
 }
